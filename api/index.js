@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 const secret = 'lkanlskfnalksnflajsdnflkjdnfklajdsnflk';
 
-app.use(cors())
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(express.json());
 
 mongoose.connect('mongodb+srv://isaquefranklin:b1l1ona1re@cluster0.hlzk7ku.mongodb.net/?retryWrites=true&w=majority')
@@ -28,19 +28,23 @@ app.post('/cadastro', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    const userDoc = await User.findOne({username: username});
+app.post('/login', async (req,res) => {
+    const {username,password} = req.body;
+    const userDoc = await User.findOne({username});
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
-        jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
-            if (err) throw err;
-            res.cookie('token', token).json('ok');
-        }) 
+      // logged in
+      jwt.sign({username,id:userDoc._id}, secret, {}, (err,token) => {
+        if (err) throw err;
+        res.cookie('token', token).json({
+          id:userDoc._id,
+          username,
+        });
+      });
     } else {
-        res.status(400).json('Usuário ou senha incorretos.')
+      res.status(400).json('wrong credentials');
     }
-})
+  });
 
 app.listen(4000, () => {
     console.log('Servidor online.')
