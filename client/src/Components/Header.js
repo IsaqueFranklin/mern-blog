@@ -6,6 +6,8 @@ export default function Header() {
 
     const {setUserInfo, userInfo} = useContext(UserContext);
 
+    //useEffect fo fetch the credentials from the server 
+    
     useEffect(() => {
        fetch('http://localhost:4000/perfil', {
         credentials: 'include',
