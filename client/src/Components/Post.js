@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function Post() {
+export default function Post(title, summary, cover, content) {
     return (
         <div className="post">
           <div className="image">
