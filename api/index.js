@@ -18,7 +18,16 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect('mongodb+srv://isaquefranklin:b1l1ona1re@cluster0.hlzk7ku.mongodb.net/?retryWrites=true&w=majority')
+//mongoose.connect('mongodb+srv://isaquefranklin:b1l1ona1re@cluster0.hlzk7ku.mongodb.net/?retryWrites=true&w=majority')
+
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb+srv://isaquefranklin:b1l1ona1re@cluster0.hlzk7ku.mongodb.net/?retryWrites=true&w=majority').then((response) => {
+    console.log('Conectado ao mongo.')
+    //console.log('Resposta do servidor: '+response)
+}).catch((err) => {
+    console.log('Erro ao conectar com mongo.')
+    console.log('Erro do servidor: '+err)
+})
 
 app.post('/cadastro', async (req, res) => {
     const { username, password } = req.body;
@@ -71,22 +80,29 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     const newPath = path+'.'+ext;
     fs.renameSync(path, newPath);
 
-    const {title, summary, content} = req.body;
+    const {token} = req.cookies;
+    jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+        const {title, summary, content} = req.body;
+        const postDoc = await Post.create({
+            title,
+            summary,
+            content,
+            cover: newPath,
+            author:info.id,
+        })
 
-    const postDoc = await Post.create({
-        title,
-        summary,
-        content,
-        cover: newPath,
+        res.json(postDoc);
     })
-
-    res.json(postDoc);
 });
 
-app.get('/post', async (req, res) => {
-    const posts = await Post.find();
-    res.json(posts);
-})
+app.get('/post', async (req,res) => {
+    res.json(
+      await Post.find()
+        .sort({createdAt: -1})
+        .limit(20)
+    );
+});
 
 app.listen(4000, () => {
     console.log('Servidor online.')
