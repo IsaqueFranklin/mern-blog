@@ -73,32 +73,33 @@ app.post('/logout', (req, res) => {
     res.cookie('token', '').json('ok')
 })
 
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
-    const {originalname, path} = req.file;
-    const parts = originalname.split('.'); 
-    const ext = parts[parts.length -1];
+app.post('/post', uploadMiddleware.single('file'), async (req,res) => {
+    const {originalname,path} = req.file;
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
     const newPath = path+'.'+ext;
     fs.renameSync(path, newPath);
-
+  
     const {token} = req.cookies;
-    jwt.verify(token, secret, {}, async (err, info) => {
-        if (err) throw err;
-        const {title, summary, content} = req.body;
-        const postDoc = await Post.create({
-            title,
-            summary,
-            content,
-            cover: newPath,
-            author:info.id,
-        })
-
-        res.json(postDoc);
-    })
+    jwt.verify(token, secret, {}, async (err,info) => {
+      if (err) throw err;
+      const {title,summary,content} = req.body;
+      const postDoc = await Post.create({
+        title,
+        summary,
+        content,
+        cover:newPath,
+        author:info.id,
+      });
+      res.json(postDoc);
+    });
+  
 });
 
 app.get('/post', async (req,res) => {
     res.json(
       await Post.find()
+        .populate('author', ['username'])
         .sort({createdAt: -1})
         .limit(20)
     );
