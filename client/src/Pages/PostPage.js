@@ -14,7 +14,15 @@ export default function PostPage() {
         })
     }, []);
 
+    if (!postInfo) return '';
+
     return (
-        <div>Post page aqui.</div>
+        <div className='post-page'>
+            <div className='image'>
+                <img src={`http://localhost:4000/${postInfo.cover}`} alt=""/>
+            </div>
+            <h1>{postInfo.title}</h1>
+            <div dangerouslySetInnerHTML={{__html:postInfo.content}} />
+        </div>
     )
 }
