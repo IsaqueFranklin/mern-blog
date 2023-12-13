@@ -5,7 +5,7 @@ export default function Post({title, summary, cover, content, createdAt, author}
     return (
         <div className="post">
           <div className="image">
-            <img src="https://t.ctcdn.com.br/E8jLZp_waQ0EBToyiLLnuSpy-wA=/925x367:2556x1349/768x432/smart/i795487.png" alt="" />
+            <img src={'http://localhost:4000/'+cover} alt="" />
           </div>
           <div className="texts">
             <h2>{title}</h2>
