@@ -97,6 +97,10 @@ app.post('/post', uploadMiddleware.single('file'), async (req,res) => {
   
 });
 
+app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+    res.json();
+})
+
 app.get('/post', async (req,res) => {
     res.json(
       await Post.find()

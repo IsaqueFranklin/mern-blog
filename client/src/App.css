@@ -114,6 +114,7 @@ div.post-page div.image {
 div.post-page div.image img {
   object-fit: cover;
   object-position: center center;
+  width: 100%;
 }
 
 div.post-page a {
@@ -125,6 +126,7 @@ div.post-page h1 {
   text-align: left;
   display: block;
   margin: 10px 0 10px;
+  line-height: 2.5rem;
 }
 
 div.post-page time {
@@ -140,4 +142,28 @@ div.post-page div.author {
   margin-bottom: 20px;
   margin-top: 20px;
   font-weight: bold;
+}
+
+div.post-page div.content p {
+  line-height: 1.65rem;
+}
+
+div.edit-row {
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+div.post-page a.edit-btn {
+  background-color: green;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-flex;
+  gap: 5px;
+}
+
+a svg{
+  height:20px;
 }
