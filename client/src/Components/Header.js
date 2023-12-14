@@ -34,6 +34,7 @@ export default function Header() {
         <nav>
         {username && (
             <>
+                <span>Olá, {username}</span>
                 <Link to="/publicar">Publicar novo post</Link>
                 <Link onClick={logout}>Logout</Link>
             </>
